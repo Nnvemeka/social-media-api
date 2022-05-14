@@ -1,11 +1,12 @@
-const express = require('express')
+const app = require('express')()
 
 const { PORT } = process.env
 
-const app = express()
+// Pre-route middlewares
+require('./src/middlewares/pre-route.middleware')(app)
 
-// Parse JSON data
-app.use(express.json())
+// Ping route for testing connetion
+app.get('/ping', (req, res) => res.status(200).send('Hello world!'))
 
 // Listen to server port
 app.listen(PORT, async () => {
