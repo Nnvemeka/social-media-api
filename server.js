@@ -5,6 +5,9 @@ const { PORT } = process.env
 // Pre-route middlewares
 require('./src/middlewares/pre-route.middleware')(app)
 
+// API routes
+app.use('/api', require("./src/routes"))
+
 // Ping route for testing connetion
 app.get('/ping', (req, res) => res.status(200).send('Hello world!'))
 
