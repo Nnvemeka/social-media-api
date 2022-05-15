@@ -1,4 +1,7 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const JWT = require('jsonwebtoken')
+const { JWT_SECRET } = process.env
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
@@ -39,9 +42,37 @@ const UserSchema = new Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 }, {
     timestamps: true
+})
+
+// Generate authentication token
+UserSchema.methods.generateAuthToken = async function () {
+    const user = this
+    const token = JWT.sign({ id: user._id.toString() }, JWT_SECRET)
+
+    user.tokens = user.tokens.concat({ token })
+    await user.save()
+
+    return token
+}
+
+// Encrypt password before saving
+UserSchema.pre('save', async (next) => {
+    const user = this
+
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 10)
+    }
+
+    next()
 })
 
 module.exports = mongoose.model('User', UserSchema)
