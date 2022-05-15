@@ -75,4 +75,15 @@ UserSchema.pre('save', async (next) => {
     next()
 })
 
+// Modify the JSON datas to display
+UserSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
 module.exports = mongoose.model('User', UserSchema)
