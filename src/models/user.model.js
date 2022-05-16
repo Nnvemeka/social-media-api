@@ -43,6 +43,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    location: {
+        type: String,
+        max: 50
+    },
     tokens: [{
         token: {
             type: String,
