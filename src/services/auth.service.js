@@ -11,7 +11,7 @@ class AuthService {
         user = new User(data)
 
         //Generate token
-        token = await user.generateAuthToken()
+        const token = await user.generateAuthToken()
 
         await user.save()
 
@@ -19,7 +19,6 @@ class AuthService {
             id: user._id,
             email: user.email,
             username: user.username,
-            password: user.password,
             token
         }
     }
@@ -43,6 +42,8 @@ class AuthService {
         return data = {
             uid: user._id,
             email: user.email,
+            followers: user.followers,
+            followings: user.followings,
             token
         }
 
