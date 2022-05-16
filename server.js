@@ -11,6 +11,9 @@ app.use('/api', require("./src/routes"))
 // Ping route for testing connetion
 app.get('/ping', (req, res) => res.status(200).send('Hello world!'))
 
+// Error middleware
+require('./src/middlewares/error.middleware')(app)
+
 // Listen to server port
 app.listen(PORT, async () => {
     // Initialize MongoDB
