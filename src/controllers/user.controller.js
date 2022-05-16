@@ -14,6 +14,10 @@ class UserController {
         const result = await UserServ.getUser(req.params.userId)
         res.status(200).send(response('User data', result))
     }
+    async followUser(req, res) {
+        const result = await UserServ.followUser(req.params.userId, req.body)
+        res.status(200).send(response('User followed', result))
+    }
 }
 
 module.exports = new UserController()
