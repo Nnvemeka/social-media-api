@@ -13,6 +13,12 @@ class UserService {
 
         return user
     }
+    async deleteUser(userId) {
+        const user = await User.findByIdAndDelete({ _id: userId })
+        if (!user) throw new CustomError('User does not exist', 404)
+
+        return user
+    }
 }
 
 module.exports = new UserService()
