@@ -13,6 +13,7 @@ class UserService {
 
         return user
     }
+
     // Delete User
     async deleteUser(userId) {
         const user = await User.findByIdAndDelete({ _id: userId })
@@ -28,6 +29,7 @@ class UserService {
 
         return user
     }
+
     // Follow a user
     async followUser(userId, data) {
         if (userId === data._id) throw new CustomError('You cannot follow yourself', 403)
@@ -45,6 +47,24 @@ class UserService {
 
         return user
     }    
+
+    // Unfollow user
+    async unFollowUser (userId, data) {
+        if (userId === data._id) throw new CustomError('You cannot unfollow yourself', 403)
+
+        const user = await User.findById({ _id: userId})
+        if (!user) throw new CustomError('User not found', 404)
+
+        const currentUser = await User.findById({ _id: data._id })
+        if (!currentUser) throw new CustomError('User not found', 404)
+
+        if (user.followers.includes(data._id)) {
+            await user.updateOne({ $pull: { followers: data._id } })
+            await currentUser.updateOne({ $pull: { followings: userId } })
+        }
+
+        return user
+    }
 }
 
 module.exports = new UserService()
