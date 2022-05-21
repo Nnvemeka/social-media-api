@@ -17,11 +17,21 @@ class PostService {
 
     // Update a post
     async updatePost(postId, data) {
-        const post = await Post.findById({ _id: postId })
+        const post = await Post.findByIdAndUpdate(
+            { _id: postId },
+            { $set: data },
+            { new: true }
+        )
+
         if (!post) throw new CustomError('Post not found', 404)
 
-        if (!post.userId === data.userId) throw new CustomError('Cannot update post', 403)
-        await post.updateOne({ $set: data })
+        return post
+    }
+
+    // Delete a post 
+    async deletePost(postId) {
+        const post = await Post.findByIdAndDelete({ _id: postId })
+        if (!post) throw new CustomError('Post not found', 404)
 
         return post
     }

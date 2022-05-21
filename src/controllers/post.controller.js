@@ -8,7 +8,11 @@ class PostController {
     }
     async updatePost(req, res) {
         const result = await PostServ.updatePost(req.params.postId, req.body)
-        res.status(201).send(response('Post updated', result))
+        res.status(200).send(response('Post updated', result))
+    }
+    async deletePost(req, res) {
+        const result = await PostServ.deletePost(req.params.postId)
+        res.status(200).send(response('Post deleted', result))
     }
 }
 
