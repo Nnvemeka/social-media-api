@@ -5,12 +5,15 @@ const { JWT_SECRET } = process.env
 
 const verifyToken = async (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '')
-    if (!token) throw new CustomError('Unauthorized access: Token not found!', 401)
-
+    if (!token) {
+        res.status(401).send('Unauthorized access: Token not found')
+    }
     const decoded = JWT.verify(token, JWT_SECRET)
     const user = await User.findOne({ _id: decoded.id, 'tokens.token': token })
 
-    if (!user) throw new CustomError('Unauthorized access: User does not exist', 401)
+    if (!user) {
+        res.status(401).send('Unauthorized access: User does not exist')
+    }
 
     req.user = user
     next()
@@ -26,4 +29,4 @@ const auth = (req, res, next) => {
     })
 }
 
-module.exports = auth
+module.exports = {verifyToken, auth}
