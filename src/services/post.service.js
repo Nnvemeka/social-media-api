@@ -35,6 +35,20 @@ class PostService {
 
         return post
     }
+
+    // Like/dislike a post
+    async likePost(postId, data) {
+        const post = await Post.findById({ _id: postId })
+        if (!post) throw new CustomError('Post not found', 404)
+
+        if (!post.likes.includes(data.userId)) {
+            await post.updateOne({ $push: { likes: data.userId } })
+        } else {
+            await post.updateOne({ $pull: { likes: data.userId } })
+        }
+
+        return post
+    }
 }
 
 module.exports = new PostService()
